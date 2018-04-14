@@ -15,6 +15,12 @@ function changeImage(img, url) {
   img.style.objectFit = "cover"
 }
 
+function changeBgUrl(img, url) {
+  console.log(url)
+  img.style.backgroundImage = "url(" + img + ")"
+  img.style.backgroundSize = "cover"
+}
+
 function changeSrc(img) {
 
   try {
@@ -39,6 +45,33 @@ function changeSrc(img) {
     xhr.send();
   } catch (e) {
     changeImage(img, randomImage());
+  }
+}
+
+function changeBg(element) {
+
+  try {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", giphy, true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == 4) {
+        // JSON.parse does not evaluate the attacker's scripts.
+        var json = JSON.parse(xhr.responseText);
+        var url = ""
+
+        if ( json.data ) {
+          url = json.data.images.source.url
+          giphyArray.push(url)
+        } else {
+          url = randomImage();
+        }
+
+        changeBgUrl(element, url);
+      }
+    }
+    xhr.send();
+  } catch (e) {
+    changeBgUrl(element, randomImage());
   }
 }
 
@@ -72,21 +105,30 @@ function loopImages(images) {
   }
 }
 
+function loopBackgrounds(items) {
+  for (var i = 0; i < items.length; i++) {
+    var item = items[i];
+
+    if ( item.style.backgroundImage == "" ) continue
+
+    if ( item.classList.contains("meme-bg-ok") ) continue;
+
+    if ( item.classList.contains("meme-bg-loading") ) {
+      changeBg(item);
+      item.classList.add("meme-bg-ok");
+      item.classList.remove("meme-bg-loading");
+    } else {
+      item.classList.add("meme-bg-loading")
+      item.style.backgroundImage = "url(" + loading + ")";
+    }
+  }
+}
+
 chrome.extension.sendMessage({}, function(response) {
   var readyStateCheckInterval = setInterval(function() {
 
-    /*
-    var divs = document.getElementsByTagName("div");
-    for (var i = 0; i < divs.length; i++) {
-      var div = divs[i];
-
-      if ( div.style.backgroundImage != "" ) {
-        console.log(div.style.backgroundImage)
-      }
-    }
-    */
-
-    // bgImages();
+    //loopBackgrounds( document.getElementsByTagName("a") )
+    //loopBackgrounds( document.getElementsByTagName("div") )
 
 
     loopImages(document.getElementsByTagName("img"));
