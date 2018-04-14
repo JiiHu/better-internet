@@ -1,5 +1,12 @@
 
-var giphy = "https://api.giphy.com/v1/gifs/random?api_key=Zv7BFWc1GaxQe5tDfr9nO9FEes8AcZKa";
+var apiKeys = [
+  "Zv7BFWc1GaxQe5tDfr9nO9FEes8AcZKa",
+  "FghTmuMQVZ0SSX52jN0iu9PAi8zC0lDB"
+];
+
+var randomApiKey = apiKeys[Math.floor(Math.random()*apiKeys.length)];
+
+var giphy = "https://api.giphy.com/v1/gifs/random?api_key=" + randomApiKey;
 
 var loading = "https://i.imgur.com/ONBvABV.png";
 
@@ -16,7 +23,6 @@ function changeImage(img, url) {
 }
 
 function changeBgUrl(img, url) {
-  console.log(url)
   img.style.backgroundImage = "url(" + img + ")"
   img.style.backgroundSize = "cover"
 }
