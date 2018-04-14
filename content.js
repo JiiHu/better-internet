@@ -12,6 +12,7 @@ function randomImage() {
 function changeImage(img, url) {
   img.srcset = url + " 100w";
   img.src = url;
+  img.style.objectFit = "cover"
 }
 
 function changeSrc(img) {
@@ -64,6 +65,8 @@ function loopImages(images) {
       img.classList.remove("meme-loading");
     } else {
       img.classList.add("meme-loading")
+      img.style.height = img.height + "px"
+      img.style.width = img.width + "px"
       images[i].src = loading;
     }
   }
